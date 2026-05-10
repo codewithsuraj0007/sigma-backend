@@ -1,14 +1,7 @@
 node_modules/
-.vercel/
-.netlify/
 .env
-.env.local
 .DS_Store
 *.log
-functions/
-dist/
-coverage/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+
+.vsccode/
+

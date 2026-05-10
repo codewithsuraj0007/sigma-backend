@@ -1,103 +1,92 @@
-import {
-  createFeedbackTransporter,
-  escapeHtml
-} from '../../api/_utils.js';
+// netlify/functions/feedback.js
+// Netlify Serverless Function — Feedback Email Handler
+// Endpoint: /api/send-feedback (via redirect in netlify.toml)
 
-const CORS_HEADERS = {
-  'Content-Type': 'application/json; charset=utf-8',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-};
+const nodemailer = require('nodemailer');
 
-function getStarRating(value) {
-  const normalized = Number.parseInt(value, 10);
-  const safeRating = Number.isNaN(normalized) ? 0 : Math.min(Math.max(normalized, 1), 5);
-  return { safeRating, stars: '*'.repeat(safeRating) };
-}
-
-export async function handler(event) {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
-  }
-
+exports.handler = async (event) => {
+  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: CORS_HEADERS,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
-    const body = JSON.parse(event.body || '{}');
-    const name = body?.name?.trim();
-    const email = body?.email?.trim() || 'Not provided';
-    const message = body?.message?.trim();
-    const timestamp = body?.timestamp || new Date().toISOString();
-    const { safeRating, stars } = getStarRating(body?.rating);
+    const { name, email, rating, message, timestamp } = JSON.parse(event.body || '{}');
 
-    if (!name || !message || safeRating === 0) {
+    if (!name || !rating || !message) {
       return {
         statusCode: 400,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'name, rating, and message are required' })
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ error: 'Missing required fields' })
       };
     }
 
-    if (!process.env.EMAIL_USER) {
+    const emailUser = process.env.EMAIL_USER || 'sigmadeveloper.in@gmail.com';
+    const emailPass = process.env.EMAIL_PASS;
+
+    if (!emailPass) {
+      console.warn('⚠️ EMAIL_PASS missing. Logging feedback to console:');
+      console.log(`Feedback from ${name}: ${rating}/5 - ${message}`);
       return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'EMAIL_USER is not configured' })
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ 
+          success: true, 
+          warning: 'EMAIL_PASS_MISSING',
+          message: 'Feedback received but email not sent (check environment variables).' 
+        })
       };
     }
 
-    const transporter = createFeedbackTransporter();
-    if (!transporter) {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'EMAIL_PASS is not configured' })
-      };
-    }
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: emailUser,
+        pass: emailPass
+      }
+    });
 
-    await transporter.sendMail({
-      from: `"Sigma Portfolio" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      replyTo: email !== 'Not provided' ? email : undefined,
-      subject: `New Portfolio Feedback ${stars}`,
+    const starRating = '⭐'.repeat(Math.min(Math.max(rating, 1), 5));
+    const mailOptions = {
+      from: `"Sigma Portfolio" <${emailUser}>`,
+      to: 'sigmadeveloper.in@gmail.com',
+      subject: `New Portfolio Feedback ${starRating}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
-          <h2 style="margin: 0 0 16px; color: #111827;">New Portfolio Feedback</h2>
-          <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-          <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-          <p><strong>Rating:</strong> ${escapeHtml(stars)} (${safeRating}/5)</p>
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 600px;">
+          <h2 style="color: #a855f7;">New Feedback Received</h2>
+          <hr>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email || 'Not Provided'}</p>
+          <p><strong>Rating:</strong> ${starRating} (${rating}/5)</p>
           <p><strong>Message:</strong></p>
-          <div style="padding: 16px; background: #f9fafb; border-left: 4px solid #111827; white-space: pre-wrap;">${escapeHtml(message)}</div>
-          <p style="margin-top: 16px; color: #6b7280; font-size: 12px;">Submitted at: ${escapeHtml(timestamp)}</p>
+          <div style="background: #fdf2f8; padding: 15px; border-radius: 5px; border-left: 4px solid #ec4899;">
+            ${message.replace(/\n/g, '<br>')}
+          </div>
+          <p style="font-size: 0.8rem; color: #999; margin-top: 20px;">
+            Submitted on: ${timestamp || new Date().toLocaleString()}
+          </p>
         </div>
       `
-    });
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return {
       statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ success: true, message: 'Feedback sent successfully' })
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ success: true, message: 'Feedback sent successfully!' })
     };
-  } catch (error) {
-    if (error instanceof SyntaxError) {
-      return {
-        statusCode: 400,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'Request body must be valid JSON' })
-      };
-    }
 
+  } catch (err) {
+    console.error('Feedback function error:', err.message);
     return {
       statusCode: 500,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ error: 'Email service error' })
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Internal server error' })
     };
   }
-}
+};

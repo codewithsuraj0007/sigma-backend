@@ -1,18 +1,17 @@
 {
   "name": "sigma-portfolio-deployment-proxy",
-  "version": "1.1.0",
-  "private": true,
-  "description": "Root deployment configuration for The Sigma Developers portfolio",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Root configuration for Sigma Developer Portfolio deployment on Netlify and Vercel.",
   "engines": {
     "node": "20.x"
   },
   "scripts": {
-    "build": "echo \"Static frontend deployment - no build step required\"",
-    "dev": "node sigma-portfolio-backend/server.js",
-    "start": "node sigma-portfolio-backend/server.js"
+    "build": "echo 'Static frontend deployment - no build step required'",
+    "start": "cd sigma-portfolio-backend && npm start"
   },
   "dependencies": {
-    "nodemailer": "^8.0.7"
+    "nodemailer": "^6.9.7"
   }
 }
+
