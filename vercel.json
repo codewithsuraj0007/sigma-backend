@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/chat",
@@ -11,11 +16,7 @@
     },
     {
       "source": "/api/send-feedback",
-      "destination": "/api/feedback"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
+      "destination": "/api/send-feedback"
     }
   ],
   "headers": [

@@ -1,107 +1,90 @@
-// api/chat.js
-// Vercel Serverless Function — AI Chat Proxy
+import {
+  applyCors,
+  handleOptions,
+  readJsonBody,
+  sendJson,
+  SYSTEM_PROMPT
+} from './_utils.js';
 
-const SYSTEM_PROMPT = `You are Suraj Prajapati's AI assistant on his developer portfolio website. Your job is to help visitors learn about Suraj, answer their questions, and connect them with him.
+export default async function handler(req, res) {
+  if (handleOptions(req, res)) {
+    return;
+  }
 
-PERSONALITY: Be concise (2-3 sentences max per response), professional, confident, and human-like. Never say "As an AI". Use at most 1 emoji per response. Be warm but not overly casual.
+  applyCors(req, res);
 
-SURAJ'S PROFILE:
-- Name: Suraj Prajapati
-- Brand: The Sigma Developers
-- Title: MERN Full Stack Developer & AI Integration Engineer
-- Location: Lucknow, UP, India
-- Education: Diploma in IT with AI — Government Polytechnic, Lucknow
-- Current Role: Web Developer at Seek Unique Productions (Sep 2025 – Present)
-
-TECH STACK:
-- Frontend: React.js, JavaScript ES6+, HTML5, CSS3, Tailwind CSS, Bootstrap 5
-- Backend: Node.js, Express.js, ASP.NET Core, C#, REST APIs
-- Databases: MongoDB, SQL Server, Firestore
-- Cloud: Google Cloud, AWS, Firebase, Supabase
-- AI: Vertex AI, Generative AI, Amazon Q, Gemini API
-- Tools: Git, GitHub, Docker, Postman, Stripe
-
-KEY PROJECTS:
-1. AI Image Generator — Text-to-image platform using AI APIs (React.js, AI API, CSS3)
-2. Developer Portfolio — Premium animated site with glassmorphism, 95+ Lighthouse (HTML5, CSS3, JS, Firebase)
-3. MERN Full Stack App — Enterprise-grade with JWT auth, RESTful APIs (React, Node.js, MongoDB, Express)
-4. Real-time Chat Platform — Firebase-powered messaging (React, Firebase, Firestore)
-
-CERTIFICATIONS:
-- AWS Solutions Architecture (Amazon Web Services)
-- Generative AI Studio (Google Cloud)
-- Software Engineering (JPMorgan Chase)
-- Data Analytics (Deloitte)
-- Data Visualisation (TATA)
-- .NET Full Stack (Hindtech IT Solutions)
-
-CONTACT (share when asked or when hiring/collaboration intent detected):
-- WhatsApp (fastest): https://wa.me/916387441629
-- Email: kingsuraj6387@gmail.com
-- LinkedIn: https://www.linkedin.com/in/suraj-prajapati-0904b92b9
-- Portfolio: https://thesigmadevelopers.netlify.app/
-
-RULES:
-- Keep answers short and punchy (2-3 sentences).
-- Use markdown bold (**text**) for emphasis.
-- Share contact info only when asked directly or when hiring/collaboration intent is detected.
-- If someone asks a general tech question, give a brief helpful answer and relate it back to Suraj's experience when relevant.
-- If someone asks something completely off-topic, gently redirect to Suraj's portfolio.`;
-
-module.exports = async (req, res) => {
-  // Only allow POST
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    sendJson(res, 405, { error: 'Method not allowed' });
+    return;
   }
 
   try {
-    const { messages } = req.body;
+    const body = await readJsonBody(req);
+    const { messages } = body;
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return res.status(400).json({ error: 'Messages array is required' });
+    if (!Array.isArray(messages) || messages.length === 0) {
+      sendJson(res, 400, { error: 'Messages array is required' });
+      return;
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: 'API key not configured.' });
+    if (!process.env.OPENROUTER_API_KEY) {
+      sendJson(res, 500, { error: 'OPENROUTER_API_KEY is not configured' });
+      return;
     }
 
-    const openRouterBody = {
-      model: 'google/gemini-2.0-flash-001',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...messages.slice(-10)
-      ],
-      max_tokens: 300,
-      temperature: 0.7
-    };
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://thesigmadevelopers.netlify.app/',
-        'X-Title': 'Sigma Portfolio AI Assistant'
-      },
-      body: JSON.stringify(openRouterBody)
-    });
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'X-Title': 'Sigma Portfolio AI Assistant'
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.0-flash-001',
+          messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
+          max_tokens: 300,
+          temperature: 0.7
+        }),
+        signal: controller.signal
+      });
 
-    if (!response.ok) {
-      return res.status(502).json({ error: 'LLM service error' });
+      if (!response.ok) {
+        const details = await response.text();
+        sendJson(res, 502, {
+          error: 'OpenRouter request failed',
+          status: response.status,
+          details
+        });
+        return;
+      }
+
+      const data = await response.json();
+      const reply = data?.choices?.[0]?.message?.content;
+
+      if (!reply) {
+        sendJson(res, 502, { error: 'OpenRouter returned an empty reply' });
+        return;
+      }
+
+      sendJson(res, 200, { reply });
+    } finally {
+      clearTimeout(timeout);
+    }
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      sendJson(res, 400, { error: 'Request body must be valid JSON' });
+      return;
     }
 
-    const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content;
-
-    if (!reply) {
-      return res.status(502).json({ error: 'Empty response from LLM' });
+    if (error?.name === 'AbortError') {
+      sendJson(res, 504, { error: 'OpenRouter request timed out' });
+      return;
     }
 
-    res.status(200).json({ reply });
-
-  } catch (err) {
-    console.error('Chat function error:', err.message);
-    res.status(500).json({ error: 'Internal server error' });
+    sendJson(res, 500, { error: 'Internal server error' });
   }
-};
+}

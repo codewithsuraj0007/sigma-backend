@@ -1,15 +1,7 @@
 [build]
-  # Static frontend directory
   publish = "frontend"
-  # No build command needed — pure static site
   command = ""
-  # Netlify Functions directory (serverless API handlers)
   functions = "netlify/functions"
-
-# ── API Routes → Netlify Serverless Functions ──────────────────────────────
-# /api/chat         → netlify/functions/chat.js
-# /api/send-feedback → netlify/functions/feedback.js
-# These run on Netlify's edge — no external server needed!
 
 [[redirects]]
   from = "/api/chat"
@@ -29,7 +21,6 @@
   status = 200
   force = true
 
-# ── SPA Fallback ────────────────────────────────────────────────────────────
 [[redirects]]
   from = "/*"
   to = "/index.html"

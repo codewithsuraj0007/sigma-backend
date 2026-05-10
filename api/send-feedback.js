@@ -1,14 +1,11 @@
 import {
+  applyCors,
   createFeedbackTransporter,
-  escapeHtml
-} from '../../api/_utils.js';
-
-const CORS_HEADERS = {
-  'Content-Type': 'application/json; charset=utf-8',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-};
+  escapeHtml,
+  handleOptions,
+  readJsonBody,
+  sendJson
+} from './_utils.js';
 
 function getStarRating(value) {
   const normalized = Number.parseInt(value, 10);
@@ -16,21 +13,20 @@ function getStarRating(value) {
   return { safeRating, stars: '*'.repeat(safeRating) };
 }
 
-export async function handler(event) {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+export default async function handler(req, res) {
+  if (handleOptions(req, res)) {
+    return;
   }
 
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
+  applyCors(req, res);
+
+  if (req.method !== 'POST') {
+    sendJson(res, 405, { error: 'Method not allowed' });
+    return;
   }
 
   try {
-    const body = JSON.parse(event.body || '{}');
+    const body = await readJsonBody(req);
     const name = body?.name?.trim();
     const email = body?.email?.trim() || 'Not provided';
     const message = body?.message?.trim();
@@ -38,28 +34,19 @@ export async function handler(event) {
     const { safeRating, stars } = getStarRating(body?.rating);
 
     if (!name || !message || safeRating === 0) {
-      return {
-        statusCode: 400,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'name, rating, and message are required' })
-      };
+      sendJson(res, 400, { error: 'name, rating, and message are required' });
+      return;
     }
 
     if (!process.env.EMAIL_USER) {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'EMAIL_USER is not configured' })
-      };
+      sendJson(res, 500, { error: 'EMAIL_USER is not configured' });
+      return;
     }
 
     const transporter = createFeedbackTransporter();
     if (!transporter) {
-      return {
-        statusCode: 500,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'EMAIL_PASS is not configured' })
-      };
+      sendJson(res, 500, { error: 'EMAIL_PASS is not configured' });
+      return;
     }
 
     await transporter.sendMail({
@@ -80,24 +67,13 @@ export async function handler(event) {
       `
     });
 
-    return {
-      statusCode: 200,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ success: true, message: 'Feedback sent successfully' })
-    };
+    sendJson(res, 200, { success: true, message: 'Feedback sent successfully' });
   } catch (error) {
     if (error instanceof SyntaxError) {
-      return {
-        statusCode: 400,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'Request body must be valid JSON' })
-      };
+      sendJson(res, 400, { error: 'Request body must be valid JSON' });
+      return;
     }
 
-    return {
-      statusCode: 500,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ error: 'Email service error' })
-    };
+    sendJson(res, 500, { error: 'Email service error' });
   }
 }
