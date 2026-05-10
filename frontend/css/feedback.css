@@ -1,0 +1,269 @@
+/* feedback.css - Modular Feedback Section */
+
+.fdbk-section {
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+.fdbk-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+/* Two-column layout */
+.fdbk-left {
+    flex: 1;
+}
+
+.fdbk-right {
+    flex: 1;
+}
+
+.fdbk-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.fdbk-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.fdbk-description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+}
+
+/* Animated Visual Block */
+.fdbk-visual {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    margin-top: 2rem;
+}
+
+.fdbk-visual-orb {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    filter: blur(40px);
+    opacity: 0.2;
+    animation: fdbk-pulse 4s ease-in-out infinite;
+}
+
+.fdbk-visual-lines {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed var(--accent-1);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: fdbk-morph 8s linear infinite;
+    opacity: 0.3;
+}
+
+/* Feedback Form Card */
+.fdbk-card {
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.fdbk-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.fdbk-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.fdbk-input, 
+.fdbk-textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 1rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+[data-theme="day"] .fdbk-input,
+[data-theme="day"] .fdbk-textarea {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.fdbk-input:focus,
+.fdbk-textarea:focus {
+    outline: none;
+    border-color: var(--accent-1);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+}
+
+.fdbk-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Star Rating */
+.fdbk-stars {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.fdbk-star {
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.fdbk-star:hover,
+.fdbk-star.active {
+    color: #facc15;
+    transform: scale(1.1);
+}
+
+/* Submit Button */
+.fdbk-submit {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    background: var(--gradient-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fdbk-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.fdbk-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animations */
+.fdbk-animate-left {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.fdbk-animate-right {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.fdbk-animate-up {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.fdbk-visible {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+@keyframes fdbk-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.2; }
+    50% { transform: scale(1.2); opacity: 0.3; }
+}
+
+@keyframes fdbk-morph {
+    0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(0deg); }
+    25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+    50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+    75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+    100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(360deg); }
+}
+
+/* Success Message */
+.fdbk-success {
+    text-align: center;
+    padding: 2rem;
+    display: none;
+}
+
+.fdbk-success-icon {
+    width: 60px;
+    height: 60px;
+    background: #22c55e;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.5rem;
+}
+
+/* Loader */
+.fdbk-loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: fdbk-spin 0.8s linear infinite;
+    display: none;
+}
+
+@keyframes fdbk-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .fdbk-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .fdbk-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .fdbk-visual {
+        margin: 2rem auto;
+    }
+    .fdbk-card {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .fdbk-title {
+        font-size: 2.25rem;
+    }
+    .fdbk-card {
+        padding: 1.5rem;
+    }
+}

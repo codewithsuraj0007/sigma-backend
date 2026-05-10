@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signals Section - Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --text-primary: #f5f5f7;
+      --text-secondary: #c7c7cc;
+      --text-muted: #8e8e93;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --blue: #3b82f6;
+      --border-glass: rgba(255, 255, 255, 0.08);
+      --radius-md: 12px;
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 60px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 48px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .signals-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signals-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.08), transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .signal-card {
+      padding: 24px;
+      background: rgba(18, 18, 26, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out backwards;
+    }
+
+    .signal-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .signal-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(168, 85, 247, 0.2);
+      box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+    }
+
+    .signal-card:hover::before {
+      opacity: 1;
+    }
+
+    .signal-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+      font-weight: 400;
+    }
+
+    .signal-text strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .signal-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .signal-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--purple);
+      opacity: 0.6;
+    }
+
+    .signal-category {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .signal-card:nth-child(1) { animation-delay: 0s; }
+    .signal-card:nth-child(2) { animation-delay: 0.05s; }
+    .signal-card:nth-child(3) { animation-delay: 0.1s; }
+    .signal-card:nth-child(4) { animation-delay: 0.15s; }
+    .signal-card:nth-child(5) { animation-delay: 0.2s; }
+    .signal-card:nth-child(6) { animation-delay: 0.25s; }
+    .signal-card:nth-child(7) { animation-delay: 0.3s; }
+    .signal-card:nth-child(8) { animation-delay: 0.35s; }
+    .signal-card:nth-child(9) { animation-delay: 0.4s; }
+
+    @media (max-width: 768px) {
+      .signals-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .signal-card {
+        padding: 20px;
+      }
+
+      .signal-text {
+        font-size: 0.9rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="signals-section">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="gradient-text">Signals</span>
+      </h2>
+      <p class="section-subtitle">How I think about code, systems, and building products</p>
+
+      <div class="signals-grid">
+        <article class="signal-card">
+          <p class="signal-text">Good architecture is invisible until it fails.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Systems</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">AI doesn't replace developers, it replaces bad decisions.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">AI</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Most bugs are communication problems disguised as code problems.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Engineering</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Shipping teaches more than planning ever will.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Product</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Cloud is about trade-offs, not services.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Cloud</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">The best code is the code you don't write.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Design</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Performance is a feature, not an optimization.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Performance</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Documentation is a love letter to your future self.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Process</span>
+          </div>
+        </article>
+
+        <article class="signal-card">
+          <p class="signal-text">Every abstraction has a cost. Choose wisely.</p>
+          <div class="signal-meta">
+            <svg class="signal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+            <span class="signal-category">Architecture</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thesigmadevelopers.web.app/sitemap.xml

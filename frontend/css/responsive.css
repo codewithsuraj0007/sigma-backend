@@ -1,0 +1,318 @@
+/* responsive.css */
+/* ==========================================
+   RESPONSIVE - Mobile & Tablet Breakpoints
+   ========================================== */
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .hero-content {
+    order: 2;
+  }
+
+  .hero-image-wrap {
+    order: 1;
+  }
+
+  .hero-badge {
+    justify-content: center;
+  }
+
+  .hero-tagline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .certs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sigma-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .flagship-top-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flagship-shell-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flagship-head-summary {
+    max-width: none;
+  }
+
+  .flagship-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flagship-system-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flagship-engineering-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    flex-direction: column;
+    background: rgba(10, 10, 15, 0.95);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-link {
+    padding: 12px 16px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .cursor-glow {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding: 70px 0;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .hero {
+    padding-top: 60px;
+    min-height: auto;
+    padding-bottom: 80px;
+  }
+
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-image-card {
+    width: 260px;
+    height: 300px;
+  }
+
+  .hero-tagline {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .about-line {
+    font-size: 1rem;
+  }
+
+  .about-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .certs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline {
+    padding-left: 36px;
+  }
+
+  .timeline-line {
+    left: 8px;
+  }
+
+  .timeline-dot {
+    left: -34px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .timeline-dot-ring {
+    inset: -3px;
+  }
+
+  .timeline-card {
+    padding: 20px;
+  }
+
+  .education-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .edu-results {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .result-top {
+    text-align: left;
+  }
+
+  .result-actions {
+    flex-wrap: wrap;
+  }
+
+  .modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .chat-panel {
+    width: calc(100vw - 48px);
+    right: -8px;
+  }
+
+  .navbar {
+    width: calc(100% - 16px);
+    top: 8px;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
+  .project-filter {
+    gap: 6px;
+  }
+
+  .flagship-shell {
+    padding: 22px 16px;
+  }
+
+  .mockup-screen {
+    height: 300px;
+  }
+
+  .flagship-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .flagship-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .flagship-toggle {
+    width: 100%;
+    text-align: center;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  .cert-category-title {
+    font-size: 1rem;
+  }
+
+  .sigma-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .sigma-intro {
+    font-size: 1rem;
+  }
+
+  .sigma-pillars {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .footer-links {
+    gap: 8px;
+  }
+
+  .footer-brand {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-number {
+    font-size: 1.6rem;
+  }
+
+  .project-filter {
+    flex-direction: column;
+    align-items: center;
+  }
+}

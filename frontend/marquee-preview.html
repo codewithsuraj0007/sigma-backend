@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinite Testimonial Marquee - Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --text-primary: #f5f5f7;
+      --text-secondary: #c7c7cc;
+      --text-muted: #8e8e93;
+      --pink: #ec4899;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 60px 0;
+      overflow-x: hidden;
+    }
+
+    .marquee-section {
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .marquee-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.06), transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .marquee-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .marquee-wrapper {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 16px;
+      animation: scroll 40s linear infinite;
+      width: max-content;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    .marquee-card {
+      flex-shrink: 0;
+      width: 320px;
+      padding: 24px;
+      background: rgba(18, 18, 26, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .marquee-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(236, 72, 153, 0.2);
+      box-shadow: 0 8px 32px rgba(236, 72, 153, 0.15);
+    }
+
+    .marquee-quote {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .marquee-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .marquee-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: white;
+    }
+
+    .marquee-author-info h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .marquee-author-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-320px * 6 - 16px * 6));
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="marquee-section">
+    <div class="marquee-header">
+      <h2 class="section-title">
+        <span class="gradient-text">What People Say</span>
+      </h2>
+    </div>
+
+    <div class="marquee-wrapper">
+      <div class="marquee-track">
+        <article class="marquee-card">
+          <p class="marquee-quote">"Suraj delivered a pixel-perfect React app ahead of schedule. His attention to detail and clean code practices are exceptional."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">AK</div>
+            <div class="marquee-author-info">
+              <h4>Amit Kumar</h4>
+              <p>Product Manager</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Working with Suraj was seamless. He understood our requirements quickly and implemented a robust MERN stack solution."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">PS</div>
+            <div class="marquee-author-info">
+              <h4>Priya Sharma</h4>
+              <p>Startup Founder</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"His Firebase integration skills saved us weeks of development time. Highly recommend for cloud-based projects."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">RV</div>
+            <div class="marquee-author-info">
+              <h4>Rahul Verma</h4>
+              <p>Tech Lead</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Suraj's AI integration work was impressive. He built a smart chatbot that actually understands context."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">NK</div>
+            <div class="marquee-author-info">
+              <h4>Neha Kapoor</h4>
+              <p>AI Consultant</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Fast, reliable, and professional. Suraj's full-stack expertise helped us launch our MVP in record time."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">VJ</div>
+            <div class="marquee-author-info">
+              <h4>Vikram Joshi</h4>
+              <p>CTO</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"His understanding of modern web architecture is solid. Great communication and problem-solving skills."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">SM</div>
+            <div class="marquee-author-info">
+              <h4>Sanjay Mehta</h4>
+              <p>Engineering Manager</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Duplicate for seamless loop -->
+        <article class="marquee-card">
+          <p class="marquee-quote">"Suraj delivered a pixel-perfect React app ahead of schedule. His attention to detail and clean code practices are exceptional."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">AK</div>
+            <div class="marquee-author-info">
+              <h4>Amit Kumar</h4>
+              <p>Product Manager</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Working with Suraj was seamless. He understood our requirements quickly and implemented a robust MERN stack solution."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">PS</div>
+            <div class="marquee-author-info">
+              <h4>Priya Sharma</h4>
+              <p>Startup Founder</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"His Firebase integration skills saved us weeks of development time. Highly recommend for cloud-based projects."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">RV</div>
+            <div class="marquee-author-info">
+              <h4>Rahul Verma</h4>
+              <p>Tech Lead</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Suraj's AI integration work was impressive. He built a smart chatbot that actually understands context."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">NK</div>
+            <div class="marquee-author-info">
+              <h4>Neha Kapoor</h4>
+              <p>AI Consultant</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"Fast, reliable, and professional. Suraj's full-stack expertise helped us launch our MVP in record time."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">VJ</div>
+            <div class="marquee-author-info">
+              <h4>Vikram Joshi</h4>
+              <p>CTO</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="marquee-card">
+          <p class="marquee-quote">"His understanding of modern web architecture is solid. Great communication and problem-solving skills."</p>
+          <div class="marquee-author">
+            <div class="marquee-avatar">SM</div>
+            <div class="marquee-author-info">
+              <h4>Sanjay Mehta</h4>
+              <p>Engineering Manager</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,127 @@
+/* marquee.css - Infinite Testimonial Marquee */
+
+.marquee-section {
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.marquee-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.06), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.marquee-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.marquee-wrapper {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 16px;
+  animation: scroll 40s linear infinite;
+  width: max-content;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-card {
+  flex-shrink: 0;
+  width: 320px;
+  padding: 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--backdrop-blur, 8px));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur, 8px));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.marquee-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(236, 72, 153, 0.2);
+  box-shadow: 0 8px 32px rgba(236, 72, 153, 0.15);
+}
+
+.marquee-quote {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.marquee-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-glass);
+}
+
+.marquee-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.marquee-author-info h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.marquee-author-info p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-320px * 6 - 16px * 6));
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee-card {
+    width: 280px;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(calc(-280px * 6 - 16px * 6));
+    }
+  }
+}

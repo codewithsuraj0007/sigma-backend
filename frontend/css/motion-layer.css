@@ -1,0 +1,187 @@
+/**
+ * THE SIGMA DEVELOPERS - MOTION LAYER
+ * GPU-accelerated primitives and section-specific reveals
+ */
+
+/* --- Core Reveal Primitives --- */
+.motion-reveal {
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity;
+}
+
+.motion-reveal.motion-active {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) !important;
+}
+
+/* --- Section 1: Hero Reveal (Left to Right) --- */
+.reveal-s1 {
+    transform: translateX(-20px);
+}
+
+.hero-photo-reveal {
+    transform: scale(0.95);
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s ease;
+}
+
+/* --- Section 2: About (Right to Left + Stagger) --- */
+.reveal-s2 {
+    transform: translateX(20px);
+}
+
+.motion-stagger {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.motion-stagger.motion-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Section 3: Skills (Vertical Lift + Scale) --- */
+.reveal-s3 {
+    transform: translateY(15px) scale(0.95);
+}
+
+/* --- Section 4: Why Me (Parallax Container) --- */
+.parallax-container {
+    perspective: 1000px;
+}
+
+.parallax-bg {
+    transform: translateZ(-10px) scale(1.1);
+    transition: transform 0.1s linear;
+}
+
+/* --- Section 5: Signals (Blur Reduction) --- */
+.reveal-s5 {
+    filter: blur(10px);
+    transition: filter 0.8s ease, transform 0.8s ease, opacity 0.8s ease;
+}
+
+.reveal-s5.motion-active {
+    filter: blur(0);
+}
+
+/* --- Hero Specifics --- */
+.blur-sharpen {
+    filter: blur(4px);
+    animation: blurSharpen 0.6s forwards cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes blurSharpen {
+    to {
+        filter: blur(0);
+    }
+}
+
+.hero-drift {
+    background: linear-gradient(-45deg, #a855f722, #ec489922, #3b82f622, #06b6d422);
+    background-size: 400% 400%;
+    animation: gradientDrift 30s ease infinite;
+}
+
+@keyframes gradientDrift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* --- Micro Interactions --- */
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(to right, #a855f7, #ec4899);
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s ease;
+}
+
+.hover-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-magnetic {
+    transition: transform 0.15s ease-out;
+    display: inline-block;
+}
+
+/* --- Advanced Effects --- */
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.008;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.shimmer-border {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer-border::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 100%);
+    transform: rotate(45deg);
+    animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+/* --- Theme Transition --- */
+.theme-switch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.theme-transitioning .theme-switch-overlay {
+    opacity: 1;
+}
